@@ -122,10 +122,37 @@ template<typename T>void List<T>::listPrint(void (*p)(T t))
 
 template<typename T>int List<T>::set(int ind,T t)
 {
-    List<T> L = next; 
-    for (int i = 0; i <= ind; i++)
+    if (ind < 0 || ind >= length)
     {
-        /* code */
+        return ERROR;
     }
     
+    List<T> *L = next; 
+    for (int i = 0; i < ind; i++)
+    {
+        L = L->next;
+    }
+    L->item = t;
+    return OK;
+}
+
+template<typename T>int List<T>::deleteItem(int ind)
+{
+    List<T> *tmp,*L = head;
+    if (ind < 0 || ind >= length)
+        return ERROR;
+    if (ind == 0)
+    {
+        tmp = head->next;
+        head->next = head->next->next;
+        delete tmp;
+        return OK;
+    }
+    
+    for (int i = 0; i < ind ; i++)
+        L = L->next;
+    tmp = L->next;
+    L->next = tmp->next;
+    delete tmp;
+    return OK;
 }
