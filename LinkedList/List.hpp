@@ -13,17 +13,16 @@ template <class T>
 class List
 {
 public:
-    //Get length
-    int Length() { return length + 1; }
-    //Get size
-    int Size() { return size; }
+//Get length
+    int Length() { return length; }
+//    int Size() { return size; }
 
     List();
 
-    //It doesn't do anything
+//It doesn't do anything
     int init();
 
-    //Put an item to the end of the List
+//Put an item to the end of the List
     int push_back(T t);
 
     int insert(int ind, T t);
@@ -49,11 +48,11 @@ private:
     List<T> *head;
     T item;
     int length = 0;
-    int initState;
-    int size;
-    int size_of_element;
-
-    int realloc_list();
+//    The following variables were for SeqList
+//    int initState;
+//    int size;
+//    int size_of_element;
+//int realloc_list();
 };
 
 template<typename T>List<T>::List()
@@ -123,22 +122,29 @@ template<typename T>void List<T>::listPrint(void (*p)(T t))
 template<typename T>int List<T>::set(int ind,T t)
 {
     if (ind < 0 || ind >= length)
-    {
         return ERROR;
-    }
-    
     List<T> *L = next; 
     for (int i = 0; i < ind; i++)
-    {
         L = L->next;
-    }
     L->item = t;
+    return OK;
+}
+
+template<typename T>int List<T>::get(int ind, T &t)
+{
+    if (ind < 0 || ind >= length)
+        return ERROR;
+    List<T> *L = next;
+    for (int i = 0; i < ind; i++)
+        L = L->next;
+    t = L->item;
     return OK;
 }
 
 template<typename T>int List<T>::deleteItem(int ind)
 {
-    List<T> *tmp,*L = head;
+    List<T> *tmp;
+    List<T> *L = head;
     if (ind < 0 || ind >= length)
         return ERROR;
     if (ind == 0)
@@ -148,11 +154,33 @@ template<typename T>int List<T>::deleteItem(int ind)
         delete tmp;
         return OK;
     }
-    
     for (int i = 0; i < ind ; i++)
         L = L->next;
     tmp = L->next;
     L->next = tmp->next;
     delete tmp;
+    return OK;
+}
+
+template<typename T>int List<T>::insert(int ind,T t)
+{
+    if (ind < 0 || ind >= length)
+        return ERROR;
+    List<T> *L = next;
+    List<T> *node = new(std::nothrow) List();
+    if (node == nullptr)return ERROR;
+    node->item = t;
+    node->head = head;
+    if (ind == 0)
+    {
+        next = node;
+        node->next = L;
+        return OK;    
+    }
+    
+    for (int i = 0; i < ind - 1; i++)
+        L = L->next;
+    node->next = L->next;
+    L->next = node;
     return OK;
 }
