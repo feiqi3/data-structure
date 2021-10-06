@@ -3,7 +3,7 @@
 #pragma once
 #include <iostream>
 #define TRUE 1
-#define FALSE 0
+#define FALSE -1
 #define OK 1
 #define ERROR -1
 #define INFEASIBLE -1
@@ -152,6 +152,7 @@ template<typename T>int List<T>::deleteItem(int ind)
         tmp = head->next;
         head->next = head->next->next;
         delete tmp;
+        length -=1;
         return OK;
     }
     for (int i = 0; i < ind ; i++)
@@ -159,12 +160,13 @@ template<typename T>int List<T>::deleteItem(int ind)
     tmp = L->next;
     L->next = tmp->next;
     delete tmp;
+    length -=1;
     return OK;
 }
 
 template<typename T>int List<T>::insert(int ind,T t)
 {
-    if (ind < 0 || ind >= length)
+    if (ind < 0 || ind > length)
         return ERROR;
     List<T> *L = next;
     List<T> *node = new(std::nothrow) List();
@@ -175,6 +177,7 @@ template<typename T>int List<T>::insert(int ind,T t)
     {
         next = node;
         node->next = L;
+        length +=1;
         return OK;    
     }
     
@@ -182,5 +185,6 @@ template<typename T>int List<T>::insert(int ind,T t)
         L = L->next;
     node->next = L->next;
     L->next = node;
+    length +=1;
     return OK;
 }
