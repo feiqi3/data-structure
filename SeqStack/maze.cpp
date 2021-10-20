@@ -1,23 +1,28 @@
-#include "SeqStack.cpp"
-
+#include"SeqStack.cpp"
+#include<iostream>
 int a[10][10] =
-    {
-        {0, 0, 1, 1, 1, 1, 1, 1, 1, 1},
-        {1, 0, 0, 0, 0, 1, 0, 0, 0, 1},
-        {1, 0, 0, 1, 0, 1, 1, 1, 1, 1},
-        {1, 0, 0, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 0, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 0, 1, 1, 1, 1, 1, 1, 1},
-        {1, 1, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 1, 1, 1, 1, 0, 0, 0, 0, 1},
-        {1, 1, 1, 1, 1, 1, 1, 0, 0, 1},
-        {1, 1, 1, 1, 1, 1, 1, 1, 0, 0}};
+{
+    {0, 0, 1, 1, 1, 1, 1, 1, 1, 1},
+    {1, 0, 0, 0, 0, 1, 0, 0, 0, 1},
+    {1, 1, 0, 1, 0, 1, 0, 1, 1, 1},
+    {1, 1, 0, 0, 0, 0, 0, 1, 1, 1},
+    {1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
+    {1, 1, 0, 1, 1, 1, 0, 1, 1, 1},
+    {1, 1, 0, 0, 0, 0, 0, 1, 0, 1},
+    {1, 1, 1, 1, 1, 0, 0, 0, 0, 1},
+    {1, 1, 1, 1, 1, 1, 1, 0, 0, 1},
+    {1, 1, 1, 1, 1, 1, 1, 1, 0, 0} };
 
 struct point
 {
     int x;
     int y;
     int dir;
+
+    void pointOut() 
+    {
+        printf("(%d,%d)", x, y);
+    }
 };
 
 class maze
@@ -28,39 +33,43 @@ private:
     point start;
     point end;
 
-    void move(int x, int y, point &p)
+    void move(int x, int y, point& p)
     {
         p.x += x;
         p.y += y;
     }
 
-    void visit(const point &p)
+    void visit(const point& p)
     {
         visited[p.x][p.y] = 1;
     }
 
-    void dirToGo(point& p)
+    point dirToGo(point& p)
     {
+        point tar;
+        tar.dir = 0;
+        tar.x = p.x;
+        tar.y = p.y;
         switch (p.dir)
         {
         case 0:
-            p.x +=1;
+            tar.x += 1;
             break;
         case 1:
-            p.x -=1;
+            tar.x -= 1;
             break;
         case 2:
-            p.y +=1;
+            tar.y += 1;
             break;
         case 3:
-            p.y -=1;
+            tar.y -= 1;
             break;
-        p.dir +=1;
         }
-        
+        p.dir += 1;
+        return tar;
     }
 
-    void initPoint(point &p,point a)
+    void initPoint(point& p, point a)
     {
         p.x = a.x;
         p.y = a.y;
@@ -69,7 +78,7 @@ private:
 
     bool canPass(point p)
     {
-        if (map[p.x][p.y] == 0)
+        if (map[p.x][p.y] == 0 && visited[p.x][p.y] == 0)
         {
             return true;
         }
@@ -81,54 +90,69 @@ private:
 
     bool isEnd(point x)
     {
-        if (x.x == end.x&&x.y == end.y)
+        if (x.x == end.x && x.y == end.y)
         {
             return true;
         }
         else
-            return false; 
+            return false;
     }
 public:
     maze(int a[10][10])
     {
-        memcpy(map, a, sizeof(a));
-        memcpy(visited, a, sizeof(a));
-        start = {0, 0};
-        end = {9, 9};
+        memcpy(map, a, 10 * 10 * sizeof(int));
+        memcpy(visited, a, 10 * 10 * sizeof(int));
+        start = { 0, 0 };
+        end = { 9, 9 };
     }
 
-    void findPath(stack<point> Path)
-    {  
+    int findPath(stack<point> &Path)
+    {
         int step = 0;
         point Pos;
-        initPoint(Pos,start);
-        
+        initPoint(Pos, start);
+        point now;
+        initPoint(now, Pos);
         while (true)
         {
-            point now;
-            int flag;
-            initPoint(now,Pos);
-            if (isEnd(Pos))break;
-            while(now.dir < 4)
+            
+            if (isEnd(now))break;
+            while (now.dir < 4)
             {
-                dirToGo(now);
-                if(canPass(now) == true)
+                point tmp = dirToGo(now);//下一步可能走的地方
+                if (canPass(tmp) == true)
                 {
+                    step++;
+                    now = tmp;
                     visit(now);
                     Path.push(now);
                     break;
                 }
             }
-            if (now.dir == 4 && !Path.isEmpty())
+            if (now.dir == 4 && !Path.isEmpty())//把所有可能的位置走完了，则返回上一个路径
             {
-                Pos = Path.top();
+                now = Path.top();
+                step--;
                 continue;
             }
-            
-
-
             continue;
         }
-        
+        return step;
     }
 };
+
+int main()
+{
+    maze m(a);
+    stack<point> path;
+    int step = m.findPath(path);
+    auto end= path.top();
+    path.stackTraverse([](point a) 
+    {
+     a.pointOut();
+     printf(" -> \n");
+    });
+    end.pointOut();
+    printf("\nTotal: %d step",step);
+    
+}

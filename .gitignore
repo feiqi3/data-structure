@@ -19,3 +19,4 @@ bin-release/
 LinkedList/Test.exe
 LinkedList/main.exe
 LinkedList/.vscode/settings.json
+SeqStack/maze.exe

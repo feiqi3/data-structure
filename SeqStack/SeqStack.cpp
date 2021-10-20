@@ -2,7 +2,7 @@
 #include <cstring>
 #include <new>
 #define SIZE 50
-#define INF 9999999
+#define INF nullptr
 #pragma once
 
 
@@ -14,15 +14,15 @@ private:
     int Size;
     int Length;
     bool Init;
-    T *elem;
+    T* elem;
 
     bool reloc(int _size)
     {
-        
+
         T* temp = new(std::nothrow) T[Size + _size];
         if (temp == nullptr)
             return false;
-        memcpy(temp, elem, sizeof(T) * (_size + Size));
+        memcpy(temp, elem, sizeof(T) * (Length + 1));
         delete elem;
         elem = temp;
         Size += _size;
@@ -39,19 +39,20 @@ public:
         Length = -1;
     }
 
-    int size(){return Size;}
+    int size() { return Size; }
 
-    bool init(){return Init;}
+    bool init() { return Init; }
 
-    inline bool isEmpty(){return Length == -1;}
+    inline bool isEmpty() { return Length == -1; }
 
     T top()
     {
-        if (Init == false)return INF;
-        if (Length == -1)return INF;
-        if (Length >=2 && Length % SIZE == 0)
+        T null = *(new T);
+        if (Init == false)return (null);
+        if (Length == -1)return (null);
+        if (Length >= 2 && Length % SIZE == 0)
             if (!reloc(-SIZE))
-                return INF;
+                return (null);
         T tar = elem[Length];
         Length -= 1;
         return tar;
@@ -61,7 +62,7 @@ public:
     {
         if (Init == false) return false;
         if (Length == -1) return true;
-        if (Length >=2 && Length % SIZE == 0)//Length start at 0!
+        if (Length >= 2 && Length % SIZE == 0)//Length start at 0!
             if (!reloc(-SIZE))
                 return false;
         Length -= 1;
@@ -96,5 +97,13 @@ public:
         if (elem == nullptr)
             return false;
         return true;
+    }
+
+    void stackTraverse(void(*p)(T)) 
+    {
+        for (int i = 0; i <= Length; i++)
+        {
+            p(elem[i]);
+        }
     }
 };
