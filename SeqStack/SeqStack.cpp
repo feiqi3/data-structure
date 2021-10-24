@@ -39,6 +39,8 @@ public:
         Length = -1;
     }
 
+    int length() { return Length + 1; }
+
     int size() { return Size; }
 
     bool init() { return Init; }

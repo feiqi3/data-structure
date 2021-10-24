@@ -88,6 +88,7 @@ private:
         }
     }
 
+    //判断是否到了终点
     bool isEnd(point x)
     {
         if (x.x == end.x && x.y == end.y)
@@ -109,10 +110,8 @@ public:
     int findPath(stack<point> &Path)
     {
         int step = 0;
-        point Pos;
-        initPoint(Pos, start);
         point now;
-        initPoint(now, Pos);
+        initPoint(now, start);
         while (true)
         {
             
