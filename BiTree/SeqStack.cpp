@@ -18,7 +18,6 @@ private:
 
     bool reloc(int _size)
     {
-
         T* temp = new(std::nothrow) T[Size + _size];
         if (temp == nullptr)
             return false;
@@ -39,11 +38,11 @@ public:
         Length = -1;
     }
 
-    int length() { return Length + 1; }
+    int length() { return Length + 1;}
 
-    int size() { return Size; }
+    int size() { return Size;}
 
-    bool init() { return Init; }
+    bool init() { return Init;}
 
     inline bool isEmpty() { return Length == -1; }
 

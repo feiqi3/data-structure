@@ -150,8 +150,8 @@ private:
             PostOrderRecursive(node->right,p);
             p(node);
         }
-        
     }
+    
     cNode* root;
     std::string str;
     int len;

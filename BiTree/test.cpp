@@ -6,6 +6,8 @@ using namespace std;
 
 int main()
 {
+    //样例输入:AB#C##D
+    //按完全二叉树的顺序输入
     string str;
     cin>>str;
     biTree a(str);
