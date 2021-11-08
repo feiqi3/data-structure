@@ -10,7 +10,7 @@ int main()
     //按完全二叉树的顺序输入
     string str;
     cin>>str;
-    biTree a(str);
+    biTree a(str,2);
     cout<<"preOrder traverse in traverse way:  ";
     a.preOrderBasic([](cNode*& c){cout<<c->data<<" ";});
     cout<<endl;

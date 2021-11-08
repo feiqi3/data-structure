@@ -18,18 +18,28 @@ typedef Node<char> cNode;
 class biTree
 {
 public:
-    biTree(std::string _string)
+
+    biTree(std::string _string, int mode = 1)
     {
         str = _string;
         len = _string.length();
-        genTreeNode(1, root);
+        if (mode == 1)
+        {
+            genTreeNode(1, root);
+        }
+        if (mode == 2)
+        {
+            int n = 1;
+            genTreeNode2(n, root);
+        }
+
     }
 
     bool treeEmpty() { return root == nullptr; }
 
-    void assign(cNode& node, char c) {node.data = c;}
+    void assign(cNode& node, char c) { node.data = c; }
 
-    int Depth(){return treeDepth(root);}
+    int Depth() { return treeDepth(root); }
 
     bool insertChild(cNode& node, int i, char val)
     {
@@ -54,13 +64,13 @@ public:
 
     void preOrderRecursive(void (*p)(cNode*&)) { preOrder(root, p); }
 
-    void preOrderBasic(void (*p)(cNode*&)){PreOrderBasic(p);}
+    void preOrderBasic(void (*p)(cNode*&)) { PreOrderBasic(p); }
 
-    void inOrderBasic(void (*p)(cNode*&)){InOrderBasic(p);}
+    void inOrderBasic(void (*p)(cNode*&)) { InOrderBasic(p); }
 
-    void inOrderRecursive(void (*p)(cNode*&)){InOrderRecursive(root,p);}
+    void inOrderRecursive(void (*p)(cNode*&)) { InOrderRecursive(root, p); }
 
-    void postOrderRecursive(void (*p)(cNode*&)){PostOrderRecursive(root,p);}
+    void postOrderRecursive(void (*p)(cNode*&)) { PostOrderRecursive(root, p); }
 
     cNode* Root() { return root; }
 private:
@@ -72,12 +82,12 @@ private:
         preOrder(n->right, p);
     }
 
-    void InOrderRecursive(cNode* n,void (*p)(cNode*&))
+    void InOrderRecursive(cNode* n, void (*p)(cNode*&))
     {
         if (n == nullptr)return;
-        InOrderRecursive(n->left,p);
+        InOrderRecursive(n->left, p);
         p(n);
-        InOrderRecursive(n->right,p);
+        InOrderRecursive(n->right, p);
     }
 
     void InOrderBasic(void (*p)(cNode*&))
@@ -109,16 +119,16 @@ private:
     void PreOrderBasic(void (*p)(cNode*&))
     {
         stack<cNode*> a;
-        if (root!=nullptr)
+        if (root != nullptr)
             a.push(root);
         cNode* tmp;
         while (!a.isEmpty())
         {
             tmp = a.top();
             p(tmp);
-            if (tmp->right !=nullptr)
+            if (tmp->right != nullptr)
                 a.push(tmp->right);
-            if(tmp->left != nullptr)
+            if (tmp->left != nullptr)
                 a.push(tmp->left);
         }
     }
@@ -126,14 +136,27 @@ private:
     void genTreeNode(int n, cNode*& node)
     {
         if (n >= len + 1 || str[n - 1] == '#')
-        { 
+        {
+            node = nullptr;
+            return;
+        }
+        node = new cNode;
+        node->data = str[n - 1];
+        genTreeNode(2 * n, node->left);
+        genTreeNode(2 * n + 1, node->right);
+    }
+
+    void genTreeNode2(int& n, cNode*& node)
+    {
+        if (n >= len + 1|| str[n-1] == '#')
+        {
             node = nullptr;
             return;
         }
         node = new cNode;
         node->data = str[n-1];
-        genTreeNode(2 * n, node->left);
-        genTreeNode(2 * n + 1, node->right);
+        genTreeNode2(++n, node->left);
+        genTreeNode2(++n, node->right);
     }
 
     int treeDepth(cNode* n)
@@ -142,16 +165,16 @@ private:
         return std::max(1 + treeDepth(n->left), 1 + treeDepth(n->right));
     }
 
-    void PostOrderRecursive(cNode* node,void (*p)(cNode*&))
+    void PostOrderRecursive(cNode* node, void (*p)(cNode*&))
     {
-        if (node!=nullptr)
+        if (node != nullptr)
         {
-            PostOrderRecursive(node->left,p);
-            PostOrderRecursive(node->right,p);
+            PostOrderRecursive(node->left, p);
+            PostOrderRecursive(node->right, p);
             p(node);
         }
     }
-    
+
     cNode* root;
     std::string str;
     int len;
