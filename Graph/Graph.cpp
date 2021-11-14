@@ -39,7 +39,7 @@ public:
             }
             Weight[l1][l2] = w;
         }
-        memset(visited, 0, vexNum*sizeof(int));
+        memset(visited, 0, vexNum);
     }
     int locateVex(char c)
     {
